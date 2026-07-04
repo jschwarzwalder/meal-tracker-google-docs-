@@ -87,6 +87,32 @@ After installation, you'll see a new **Meal Tracker** menu in the document.
 2. Click **Meal Tracker → Insert Meal Entry**.
 3. The template will be inserted with the current date and time already filled in.
 
+## Linting
+
+This project is written in Google Apps Script, which uses JavaScript but also provides built-in global objects such as `DocumentApp`, `Session`, and `Utilities`. Because of this, standard JavaScript linters may report false "undefined variable" errors unless those globals are declared.
+
+For a quick syntax and style check without installing any tools locally, use the **ESLint Playground**:
+
+**ESLint Playground:**
+[https://eslint.org/play/](https://eslint.org/play/?utm_source=chatgpt.com)
+
+Before pasting the script into the playground, add the following comment at the top of the file so ESLint recognizes the Apps Script globals:
+
+```javascript
+/* global DocumentApp, Session, Utilities */
+```
+
+The playground is useful for catching common JavaScript issues such as:
+
+* Syntax errors
+* Undefined variables
+* Unused variables
+* Unreachable code
+* General code quality and style issues
+
+Keep in mind that the playground does **not** understand the Google Apps Script runtime, so it cannot validate Apps Script-specific APIs or behavior. Always test the script in Google Apps Script after making changes.
+
+
 ## Future Ideas
 
 * Automatic meal numbering
