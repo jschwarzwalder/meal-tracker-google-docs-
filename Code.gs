@@ -7,6 +7,12 @@ function onOpen() {
 
 function insertMealEntry() {
   const body = DocumentApp.getActiveDocument().getBody();
+  
+  const now = new Date();
+  const tz = Session.getScriptTimeZone();
+
+  const dateString = Utilities.formatDate(now, tz, "yyyy-MM-dd");
+  const timeString = Utilities.formatDate(now, tz, "h:mm a");
 
   body.appendParagraph("Meal Entry")
       .setHeading(DocumentApp.ParagraphHeading.HEADING2);
@@ -14,8 +20,8 @@ function insertMealEntry() {
   body.appendParagraph("");
 
   body.appendParagraph("Meal #: ");
-  body.appendParagraph("Date: ");
-  body.appendParagraph("Meal time (start): ");
+  body.appendParagraph(`Date: ${dateString}`);
+  body.appendParagraph(`Meal time (start): ${timeString}`);
 
   body.appendParagraph("");
   body.appendParagraph("Food")
