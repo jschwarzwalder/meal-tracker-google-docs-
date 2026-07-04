@@ -21,7 +21,11 @@ Most nutrition tracking tools are either:
 
 This project integrates directly into Google Docs, allowing fast, flexible logging without leaving your writing environment.
 
+This project treats Google Docs as a lightweight structured data logger rather than a traditional document editor.
+
 ## Project Overview
+
+This project is maintained in GitHub and deployed via Google Apps Script.
 
 ### Source Code (GitHub)
 https://github.com/jschwarzwalder/meal-tracker-google-docs-
@@ -33,6 +37,10 @@ https://script.google.com/home/projects/1-NSvFGW8RUkGKdfPGDTA3j2KusTfoU27pTpkpni
 `1-NSvFGW8RUkGKdfPGDTA3j2KusTfoU27pTpkpnizcCoAJ4Hy3px7LzNB`
 
 This project is maintained in GitHub and deployed via Google Apps Script.
+
+## Status
+
+Actively used and iterated on for personal health tracking workflows.
 
 ## Screenshots
 
@@ -46,22 +54,21 @@ This project is maintained in GitHub and deployed via Google Apps Script.
 
 ## Features
 
-* Adds a **Meal Tracker** menu to Google Docs.
-* Inserts a complete meal entry template with one click.
-* Automatically fills in the current date.
-* Automatically fills in the current time.
-* Inserts the template at the current cursor position.
-* Organized sections for:
-
-  * Meal information
-  * Food details
-  * Macronutrients
-  * Cooking methods
-  * Fiber and vegetables
-  * Caffeine and alcohol
-  * Dexcom/CGM readings
-  * Optional notes
-
+- Adds a **Meal Tracker** menu to Google Docs
+- Inserts a complete meal entry template with one click
+- Automatically fills in the current date
+- Automatically fills in the current time
+- Inserts the template at the current cursor position
+- Organized sections for:
+  - Meal information
+  - Food details
+  - Macronutrients
+  - Cooking methods
+  - Fiber and vegetables
+  - Caffeine and alcohol
+  - Dexcom/CGM readings
+  - Optional notes
+ 
 ## Example
 
 ```text
@@ -109,8 +116,16 @@ Anything unusual about this meal?
 
 Overall thoughts:
 ```
+## Quick Start
+Fastest way to get running:
 
-## Installation
+1. Open a Google Doc  
+2. Click Extensions → Apps Script  
+3. Paste `Code.gs` from this repo  
+4. Reload the document  
+5. Use **Meal Tracker → Insert Meal Entry**
+
+## Installation (Detailed)
 
 1. Open a Google Doc.
 2. Select **Extensions → Apps Script**.
