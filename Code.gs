@@ -1,80 +1,91 @@
-function onOpen() {
-  DocumentApp.getUi()
-    .createMenu("Meal Tracker")
-    .addItem("Insert Meal Entry", "insertMealEntry")
-    .addToUi();
-}
-
 function insertMealEntry() {
   const body = DocumentApp.getActiveDocument().getBody();
-  
+
   const now = new Date();
   const tz = Session.getScriptTimeZone();
 
   const dateString = Utilities.formatDate(now, tz, "yyyy-MM-dd");
   const timeString = Utilities.formatDate(now, tz, "h:mm a");
 
-  body.appendParagraph("Meal Entry")
-      .setHeading(DocumentApp.ParagraphHeading.HEADING2);
+  const template = [
+    {
+      text: "Meal Entry",
+      heading: DocumentApp.ParagraphHeading.HEADING2
+    },
+    "",
 
-  body.appendParagraph("");
+    "Meal #:",
+    `Date: ${dateString}`,
+    `Meal time (start): ${timeString}`,
+    "",
 
-  body.appendParagraph("Meal #: ");
-  body.appendParagraph(`Date: ${dateString}`);
-  body.appendParagraph(`Meal time (start): ${timeString}`);
+    {
+      text: "Food",
+      heading: DocumentApp.ParagraphHeading.HEADING3
+    },
 
-  body.appendParagraph("");
-  body.appendParagraph("Food")
-      .setHeading(DocumentApp.ParagraphHeading.HEADING3);
+    "Food & portions (be specific):",
+    "",
 
-  body.appendParagraph("Food & portions (be specific):");
-  body.appendParagraph("");
+    "Protein at meal? (Y/N; what/how much):",
+    "",
 
-  body.appendParagraph("Protein at meal? (Y/N; what/how much):");
-  body.appendParagraph("");
+    "Carb type(s):",
+    "Total carbohydrates (if known):",
+    "",
 
-  body.appendParagraph("Carb type(s):");
-  body.appendParagraph("Total carbohydrates (if known):");
-  body.appendParagraph("");
+    "Cooking method:",
+    "",
 
-  body.appendParagraph("Cooking method:");
-  body.appendParagraph("");
+    "Sauces/added fats:",
+    "",
 
-  body.appendParagraph("Sauces/added fats:");
-  body.appendParagraph("");
+    "Fiber/vegetables included? (Y/N; what):",
+    "",
 
-  body.appendParagraph("Fiber/vegetables included? (Y/N; what):");
-  body.appendParagraph("");
+    "Caffeine/alcohol? (Y/N; what/how much):",
+    "",
 
-  body.appendParagraph("Caffeine/alcohol? (Y/N; what/how much):");
-  body.appendParagraph("");
+    "Other notes:",
+    "",
 
-  body.appendParagraph("Other notes:");
-  body.appendParagraph("");
+    {
+      text: "Dexcom Readings",
+      heading: DocumentApp.ParagraphHeading.HEADING3
+    },
 
-  body.appendParagraph("Dexcom Readings")
-      .setHeading(DocumentApp.ParagraphHeading.HEADING3);
+    "Pre-meal glucose:",
+    "30 min glucose:",
+    "60 min glucose:",
+    "90 min glucose:",
+    "120 min glucose:",
+    "Peak glucose:",
+    "Peak time:",
+    "Time above 180 mg/dL:",
+    "Time below 70 mg/dL:",
+    "Symptoms:",
+    "",
 
-  body.appendParagraph("Pre-meal glucose:");
-  body.appendParagraph("30 min glucose:");
-  body.appendParagraph("60 min glucose:");
-  body.appendParagraph("90 min glucose:");
-  body.appendParagraph("120 min glucose:");
-  body.appendParagraph("Peak glucose:");
-  body.appendParagraph("Peak time:");
-  body.appendParagraph("Time above 180 mg/dL:");
-  body.appendParagraph("Time below 70 mg/dL:");
-  body.appendParagraph("Symptoms:");
-  body.appendParagraph("");
+    {
+      text: "Optional Notes",
+      heading: DocumentApp.ParagraphHeading.HEADING3
+    },
 
-  body.appendParagraph("Optional Notes")
-      .setHeading(DocumentApp.ParagraphHeading.HEADING3);
+    "Anything unusual about this meal?",
+    "",
 
-  body.appendParagraph("Anything unusual about this meal?");
-  body.appendParagraph("");
+    "Overall thoughts:",
+    ""
+  ];
 
-  body.appendParagraph("Overall thoughts:");
-  body.appendParagraph("");
+  template.forEach(item => {
+    if (typeof item === "string") {
+      body.appendParagraph(item);
+    } else {
+      body.appendParagraph(item.text)
+          .setHeading(item.heading);
+    }
+  });
 
   body.appendHorizontalRule();
 }
