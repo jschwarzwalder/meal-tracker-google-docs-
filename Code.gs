@@ -5,16 +5,22 @@ function onOpen() {
     .addToUi();
 }
 
-// ---------- Helpers ----------
+// =====================
+// Helpers
+// =====================
 const H2 = text => ({ type: "h2", text });
 const H3 = text => ({ type: "h3", text });
 const P = text => ({ type: "p", text });
 const BLANK = { type: "blank" };
 const HR = { type: "hr" };
 
-// ---------- Main Function ----------
+// =====================
+// Main Entry
+// =====================
 function insertMealEntry() {
-  const body = DocumentApp.getActiveDocument().getBody();
+  const doc = DocumentApp.getActiveDocument();
+  const body = doc.getBody();
+  const cursor = doc.getCursor();
 
   const now = new Date();
   const tz = Session.getScriptTimeZone();
@@ -22,7 +28,43 @@ function insertMealEntry() {
   const dateString = Utilities.formatDate(now, tz, "yyyy-MM-dd");
   const timeString = Utilities.formatDate(now, tz, "h:mm a");
 
-  const template = [
+  const template = buildTemplate(dateString, timeString);
+
+  // If no cursor → append to end
+  if (!cursor) {
+    renderAtEnd(body, template);
+    return;
+  }
+
+  const element = cursor.getElement();
+
+  // Find nearest BODY-level element safely
+  let parent = element;
+
+  while (
+    parent &&
+    parent.getParent() &&
+    parent.getParent().getType() !== DocumentApp.ElementType.BODY_SECTION
+  ) {
+    parent = parent.getParent();
+  }
+
+  // If something weird happens, fallback
+  if (!parent) {
+    renderAtEnd(body, template);
+    return;
+  }
+
+  const index = body.getChildIndex(parent);
+
+  renderAtIndex(body, template, index);
+}
+
+// =====================
+// Template Builder
+// =====================
+function buildTemplate(dateString, timeString) {
+  return [
     H2("Meal Entry"),
     BLANK,
 
@@ -75,38 +117,65 @@ function insertMealEntry() {
     BLANK,
 
     P("Overall thoughts:"),
-
     HR
   ];
-
-  renderTemplate(body, template);
 }
 
-// ---------- Renderer ----------
-function renderTemplate(body, template) {
+// =====================
+// Render at End
+// =====================
+function renderAtEnd(body, template) {
+  template.forEach(item => renderItem(body, item, null));
+}
+
+// =====================
+// Render at Index
+// =====================
+function renderAtIndex(body, template, startIndex) {
+  let index = startIndex;
+
   template.forEach(item => {
-    switch (item.type) {
-      case "h2":
-        body.appendParagraph(item.text)
-          .setHeading(DocumentApp.ParagraphHeading.HEADING2);
-        break;
+    index++;
 
-      case "h3":
-        body.appendParagraph(item.text)
-          .setHeading(DocumentApp.ParagraphHeading.HEADING3);
-        break;
-
-      case "p":
-        body.appendParagraph(item.text);
-        break;
-
-      case "blank":
-        body.appendParagraph("");
-        break;
-
-      case "hr":
-        body.appendHorizontalRule();
-        break;
-    }
+    renderItem(body, item, index);
   });
+}
+
+// =====================
+// Render Single Item
+// =====================
+function renderItem(body, item, index) {
+  if (item.type === "h2") {
+    const p = index != null
+      ? body.insertParagraph(index, item.text)
+      : body.appendParagraph(item.text);
+
+    p.setHeading(DocumentApp.ParagraphHeading.HEADING2);
+  }
+
+  else if (item.type === "h3") {
+    const p = index != null
+      ? body.insertParagraph(index, item.text)
+      : body.appendParagraph(item.text);
+
+    p.setHeading(DocumentApp.ParagraphHeading.HEADING3);
+  }
+
+  else if (item.type === "p") {
+    return index != null
+      ? body.insertParagraph(index, item.text)
+      : body.appendParagraph(item.text);
+  }
+
+  else if (item.type === "blank") {
+    return index != null
+      ? body.insertParagraph(index, "")
+      : body.appendParagraph("");
+  }
+
+  else if (item.type === "hr") {
+    return index != null
+      ? body.insertHorizontalRule(index)
+      : body.appendHorizontalRule();
+  }
 }
