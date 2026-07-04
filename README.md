@@ -4,6 +4,23 @@ A simple Google Apps Script that adds a **Meal Tracker** menu to Google Docs and
 
 This template was designed to make it easy to record meals alongside continuous glucose monitor (CGM) data, such as Dexcom readings, but it can also be used as a general nutrition journal.
 
+---
+
+## Project Overview
+
+### Source Code (GitHub)
+https://github.com/jschwarzwalder/meal-tracker-google-docs-
+
+### Apps Script Project
+https://script.google.com/home/projects/1-NSvFGW8RUkGKdfPGDTA3j2KusTfoU27pTpkpnizcCoAJ4Hy3px7LzNB
+
+### Apps Script Project ID
+`1-NSvFGW8RUkGKdfPGDTA3j2KusTfoU27pTpkpnizcCoAJ4Hy3px7LzNB`
+
+This project is maintained in GitHub and deployed via Google Apps Script.
+
+---
+
 ## Features
 
 * Adds a **Meal Tracker** menu to Google Docs.
