@@ -1,10 +1,25 @@
 # Meal Tracker for Google Docs
 
-A simple Google Apps Script that adds a **Meal Tracker** menu to Google Docs and inserts a structured meal logging template directly into your document.
+![Google Apps Script](https://img.shields.io/badge/Google%20Apps%20Script-JavaScript-yellow)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Status](https://img.shields.io/badge/status-active-green)
 
-This template was designed to make it easy to record meals alongside continuous glucose monitor (CGM) data, such as Dexcom readings, but it can also be used as a general nutrition journal.
+A Google Apps Script tool that adds a **Meal Tracker system inside Google Docs**.
+
+It generates structured meal logs with automatic timestamps and is designed for tracking nutrition alongside CGM data (e.g., Dexcom).
+
+This project turns a Google Doc into a lightweight personal health logging system.
 
 ---
+
+## Why this exists
+
+Most nutrition tracking tools are either:
+- too heavy (apps with accounts, dashboards, etc.)
+- too rigid (limited customization)
+- disconnected from personal workflow
+
+This project integrates directly into Google Docs, allowing fast, flexible logging without leaving your writing environment.
 
 ## Project Overview
 
@@ -18,6 +33,14 @@ https://script.google.com/home/projects/1-NSvFGW8RUkGKdfPGDTA3j2KusTfoU27pTpkpni
 `1-NSvFGW8RUkGKdfPGDTA3j2KusTfoU27pTpkpnizcCoAJ4Hy3px7LzNB`
 
 This project is maintained in GitHub and deployed via Google Apps Script.
+
+## Screenshots
+
+### Meal Tracker Menu
+![Menu Screenshot](./screenshot/menu.png)
+
+### Inserted Meal Entry
+![Meal Entry Screenshot](./screenshot/sample-entry.png)
 
 ---
 
