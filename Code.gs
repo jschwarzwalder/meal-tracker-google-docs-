@@ -70,7 +70,7 @@ function buildTemplate(dateString, timeString) {
 
     P("Meal #:"),
     P(`Date: ${dateString}`),
-    P(`Meal time (start): ${timeString}`),
+    P(`Meal time (start/end): ${timeString} /`),
     BLANK,
 
     H3("Food"),
@@ -96,19 +96,21 @@ function buildTemplate(dateString, timeString) {
     P("Caffeine/alcohol? (Y/N; what/how much):"),
     BLANK,
 
-    P("Other notes:"),
+    P("Context / notes"),
+    P("Hunger/stress/exercise/illness/ate quickly or slowly (short notes):"),
+
     BLANK,
 
-    H3("Dexcom Readings"),
+    H3("Dexcom Readings (start at first bite)"),
     P("Pre-meal glucose:"),
     P("30 min glucose:"),
     P("60 min glucose:"),
     P("90 min glucose:"),
     P("120 min glucose:"),
-    P("Peak glucose:"),
-    P("Peak time:"),
-    P("Time above 180 mg/dL:"),
-    P("Time below 70 mg/dL:"),
+    P("Peak glucose (0–2h):"),
+    P("Peak time (minutes after first bite or clock time ):"),
+    P("Time >180 mg/dL (approx minutes or start–end clock times:"),
+    P("Time below 70 mg/dL (rough):"),
     P("Symptoms:"),
     BLANK,
 
@@ -116,7 +118,8 @@ function buildTemplate(dateString, timeString) {
     P("Anything unusual about this meal?"),
     BLANK,
 
-    P("Overall thoughts:"),
+    P("Overall thoughts(1–2 lines):"),
+    BLANK,
     HR
   ];
 }
