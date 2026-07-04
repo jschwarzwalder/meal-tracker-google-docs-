@@ -1,3 +1,5 @@
+/* global DocumentApp, Session, Utilities */
+
 function onOpen() {
   DocumentApp.getUi()
     .createMenu("Meal Tracker")
@@ -8,11 +10,20 @@ function onOpen() {
 // =====================
 // Helpers
 // =====================
-const H2 = text => ({ type: "h2", text });
-const H3 = text => ({ type: "h3", text });
-const P = text => ({ type: "p", text });
-const BLANK = { type: "blank" };
-const HR = { type: "hr" };
+const TYPE = Object.freeze({
+  H2: "h2",
+  H3: "h3",
+  P: "p",
+  BLANK: "blank",
+  HR: "hr"
+});
+
+const H2 = text => ({ type: TYPE.H2, text });
+const H3 = text => ({ type: TYPE.H3, text });
+const P = text => ({ type: TYPE.P, text });
+const BLANK = { type: TYPE.BLANK };
+const HR = { type: TYPE.HR };
+
 
 // =====================
 // Main Entry
@@ -65,12 +76,12 @@ function insertMealEntry() {
 // =====================
 function buildTemplate(dateString, timeString) {
   return [
-    H2("Meal Entry"),
+    H2(`Meal Entry — ${dateString} ${timeString}`),
     BLANK,
 
     P("Meal #:"),
     P(`Date: ${dateString}`),
-    P(`Meal time (start/end): ${timeString} /`),
+    P(`Meal time (start/end): ${timeString} / _____`),
     BLANK,
 
     H3("Food"),
@@ -109,7 +120,7 @@ function buildTemplate(dateString, timeString) {
     P("120 min glucose:"),
     P("Peak glucose (0–2h):"),
     P("Peak time (minutes after first bite or clock time ):"),
-    P("Time >180 mg/dL (approx minutes or start–end clock times:"),
+    P("Time >180 mg/dL (approx minutes or start–end clock times):"),
     P("Time below 70 mg/dL (rough):"),
     P("Symptoms:"),
     BLANK,
@@ -118,9 +129,10 @@ function buildTemplate(dateString, timeString) {
     P("Anything unusual about this meal?"),
     BLANK,
 
-    P("Overall thoughts(1–2 lines):"),
+    P("Overall thoughts (1–2 lines):"),
     BLANK,
-    HR
+    HR,
+    BLANK
   ];
 }
 
@@ -148,7 +160,7 @@ function renderAtIndex(body, template, startIndex) {
 // Render Single Item
 // =====================
 function renderItem(body, item, index) {
-  if (item.type === "h2") {
+  if (item.type === TYPE.H2) {
     const p = index != null
       ? body.insertParagraph(index, item.text)
       : body.appendParagraph(item.text);
@@ -156,7 +168,7 @@ function renderItem(body, item, index) {
     p.setHeading(DocumentApp.ParagraphHeading.HEADING2);
   }
 
-  else if (item.type === "h3") {
+  else if (item.type === TYPE.H3) {
     const p = index != null
       ? body.insertParagraph(index, item.text)
       : body.appendParagraph(item.text);
@@ -164,19 +176,19 @@ function renderItem(body, item, index) {
     p.setHeading(DocumentApp.ParagraphHeading.HEADING3);
   }
 
-  else if (item.type === "p") {
+  else if (item.type === TYPE.P) {
     return index != null
       ? body.insertParagraph(index, item.text)
       : body.appendParagraph(item.text);
   }
 
-  else if (item.type === "blank") {
+  else if (item.type === TYPE.BLANK) {
     return index != null
       ? body.insertParagraph(index, "")
       : body.appendParagraph("");
   }
 
-  else if (item.type === "hr") {
+  else if (item.type === TYPE.HR) {
     return index != null
       ? body.insertHorizontalRule(index)
       : body.appendHorizontalRule();
