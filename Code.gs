@@ -10,6 +10,9 @@ function onOpen() {
     .addItem("Insert Meal Entry", "insertMealEntry")
     .addItem("Insert Wake Entry", "insertWakeEntry")
     .addItem("Insert Bedtime Entry", "insertBedtimeEntry")
+    .addSeparator()
+    .addItem("Insert Sensor Change", "insertSensorChange")
+    .addItem("Insert Transmitter Change", "insertTransmitterChange")
     .addToUi();
 }
 
@@ -47,93 +50,6 @@ function insertMealEntry() {
   insertAtCursorOrEnd(body, cursor, template);
 }
 
-// =====================
-// Wake Entry
-// =====================
-function insertWakeEntry() {
-  const doc = DocumentApp.getActiveDocument();
-  const body = doc.getBody();
-  const cursor = doc.getCursor();
-
-  const { dateString, timeString } = getCurrentDateTime();
-
-  const template = [
-    PAGE_BREAK,
-    H2(`Wake Entry — ${dateString}`),
-    BLANK,
-
-    P("Fasting glucose:"),
-    P("Sleep quality (1–10):"),
-    BLANK,
-
-    H3("Night / Morning Context"),
-    P("Last meal timing (approx):"),
-    P(`Approximate  Wake Time:  ${timeString}`),
-    P("Sleep duration:"),
-    P("Wake quality (groggy / normal / alert):"),
-    BLANK,
-
-    H3("Symptoms"),
-    P("Any symptoms (headache, shaky, dizziness, etc.):"),
-    BLANK,
-
-    H3("Notes"),
-    P("Anything unusual or relevant:"),
-    BLANK,
-
-    HR,
-    BLANK
-  ];
-
-  insertAtCursorOrEnd(body, cursor, template);
-}
-
-// =====================
-// Bedtime Entry
-// =====================
-function insertBedtimeEntry() {
-  const doc = DocumentApp.getActiveDocument();
-  const body = doc.getBody();
-  const cursor = doc.getCursor();
-
-  const { dateString, timeString } = getCurrentDateTime();
-
-  const template = [
-    PAGE_BREAK,
-    H2(`Bedtime Entry — ${dateString} ${timeString}`),
-    BLANK,
-
-    P("Current glucose:"),
-    P("Trend before bed (rising / stable / falling):"),
-    BLANK,
-
-    H3("Food / Activity Context"),
-    P("Last meal (time + type):"),
-    P("Exercise today (Y/N + details):"),
-    BLANK,
-
-    H3("Physiological Context"),
-    P("Alcohol / stress / illness (if any):"),
-    P("Sleepiness level (1–10):"),
-    BLANK,
-
-    H3("Sleep Transition"),
-    P(`Approximate Bedtime: ${timeString}`)
-    P("Estimated time I fell asleep:"),
-    P("Any overnight concerns expected?"),
-    BLANK,
-
-    H3("Notes"),
-    P("Anything unusual today:"),
-    BLANK,
-
-    HR,
-    BLANK
-  ];
-
-  insertAtCursorOrEnd(body, cursor, template);
-}
-  
 // =====================
 // Meal Template Builder
 // =====================
@@ -226,6 +142,195 @@ function buildMealTemplate(dateString, timeString) {
 }
 
 // =====================
+// Wake Entry
+// =====================
+function insertWakeEntry() {
+  const doc = DocumentApp.getActiveDocument();
+  const body = doc.getBody();
+  const cursor = doc.getCursor();
+
+  const { dateString, timeString } = getCurrentDateTime();
+
+  const template = [
+    PAGE_BREAK,
+    H2(`Wake Entry — ${dateString}`),
+    BLANK,
+
+    P("Fasting glucose:"),
+    P("Sleep quality (1–10):"),
+    BLANK,
+
+    H3("Night / Morning Context"),
+    P("Last meal timing (approx):"),
+    P(`Approximate  Wake Time:  ${timeString}`),
+    P("Sleep duration:"),
+    P("Wake quality (groggy / normal / alert):"),
+    BLANK,
+
+    H3("Symptoms"),
+    P("Any symptoms (headache, shaky, dizziness, etc.):"),
+    BLANK,
+
+    H3("Notes"),
+    P("Anything unusual or relevant:"),
+    BLANK,
+
+    HR,
+    BLANK
+  ];
+
+  insertAtCursorOrEnd(body, cursor, template);
+}
+
+// =====================
+// Bedtime Entry
+// =====================
+function insertBedtimeEntry() {
+  const doc = DocumentApp.getActiveDocument();
+  const body = doc.getBody();
+  const cursor = doc.getCursor();
+
+  const { dateString, timeString } = getCurrentDateTime();
+
+  const template = [
+    PAGE_BREAK,
+    H2(`Bedtime Entry — ${dateString} ${timeString}`),
+    BLANK,
+
+    P("Current glucose:"),
+    P("Trend before bed (rising / stable / falling):"),
+    BLANK,
+
+    H3("Food / Activity Context"),
+    P("Last meal (time + type):"),
+    P("Exercise today (Y/N + details):"),
+    BLANK,
+
+    H3("Physiological Context"),
+    P("Alcohol / stress / illness (if any):"),
+    P("Sleepiness level (1–10):"),
+    BLANK,
+
+    H3("Sleep Transition"),
+    P(`Approximate Bedtime: ${timeString}`),
+    P("Estimated time I fell asleep:"),
+    P("Any overnight concerns expected?"),
+    BLANK,
+
+    H3("Notes"),
+    P("Anything unusual today:"),
+    BLANK,
+
+    HR,
+    BLANK
+  ];
+
+  insertAtCursorOrEnd(body, cursor, template);
+}
+  
+// =====================
+// Sensor Change
+// =====================
+function insertSensorChange() {
+  const doc = DocumentApp.getActiveDocument();
+  const body = doc.getBody();
+  const cursor = doc.getCursor();
+
+  const now = new Date(); // for math
+  const { dateString, timeString } = getCurrentDateTime(); // for UI
+
+  const expiration = getSensorExpirationDate(now);
+
+  const expDateString = Utilities.formatDate(
+    expiration,
+    Session.getScriptTimeZone(),
+    "yyyy-MM-dd"
+  );
+
+const expTimeString = Utilities.formatDate(
+  expiration,
+  Session.getScriptTimeZone(),
+  "h:mm a"
+);
+
+  const template = [
+    PAGE_BREAK,
+
+    H2(`Dexcom Sensor Change — ${dateString}`),
+    BLANK,
+
+    H3("Installation"),
+    P(`Installed: ${dateString} ${timeString}`),
+    P("Sensor Code:"),
+    P(`Approximate Expiration: ${expDateString} ${expTimeString}`),
+    BLANK,
+
+    H3("Insertion"),
+    P("Insertion Site:"),
+    P("Any bleeding?"),
+    P("Warm-up completed?"),
+    BLANK,
+
+    H3("Notes"),
+    P("Anything unusual:"),
+    BLANK,
+
+    HR,
+    BLANK
+  ];
+
+  insertAtCursorOrEnd(body, cursor, template);
+}
+
+// =====================
+// Transmitter Change
+// =====================
+function insertTransmitterChange() {
+  const doc = DocumentApp.getActiveDocument();
+  const body = doc.getBody();
+  const cursor = doc.getCursor();
+
+  const now = new Date(); // for math
+  const { dateString, timeString } = getCurrentDateTime(); // for UI
+
+  const expiration = getTransmitterExpirationDate(now);
+
+  const expDateString = Utilities.formatDate(
+    expiration,
+    Session.getScriptTimeZone(),
+    "yyyy-MM-dd"
+  );
+
+  const expTimeString = Utilities.formatDate(
+    expiration,
+    Session.getScriptTimeZone(),
+    "h:mm a"
+  );
+
+  const template = [
+    PAGE_BREAK,
+
+    H2(`Dexcom Transmitter Change — ${dateString}`),
+    BLANK,
+
+    H3("Installation"),
+    P(`Installed: ${dateString} ${timeString}`),
+    P(`Transmitter ID: `),
+    P(`Replacement Due: ${expDateString} ${expTimeString}`),
+    BLANK,
+
+    H3("Reason"),
+    BLANK,
+    BLANK,
+
+    HR,
+    BLANK
+  ];
+
+  insertAtCursorOrEnd(body, cursor, template);
+}
+
+// =====================
 // Date & Time Helper
 // =====================
 function getCurrentDateTime() {
@@ -238,9 +343,27 @@ function getCurrentDateTime() {
   };
 }
 
-// =====================
+// ==========================
+// Calculate Sensor Expiration
+// ===========================
+function getSensorExpirationDate(installDate) {
+  const d = new Date(installDate);
+  d.setDate(d.getDate() + 10);
+  return d;
+}
+
+// ================================
+// Calculate Transmitter Expiration
+// ================================
+function getTransmitterExpirationDate(installDate) {
+  const d = new Date(installDate);
+  d.setDate(d.getDate() + 90);
+  return d;
+}
+
+// =============================
 // Cursor Insert Helper (shared)
-// =====================
+// =============================
 function insertAtCursorOrEnd(body, cursor, template) {
   if (!cursor) {
     renderAtEnd(body, template);
