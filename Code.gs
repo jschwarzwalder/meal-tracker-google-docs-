@@ -2,8 +2,10 @@
 
 function onOpen() {
   DocumentApp.getUi()
-    .createMenu("Meal Tracker")
+    .createMenu("Glucose Tracker")
     .addItem("Insert Meal Entry", "insertMealEntry")
+    .addItem("Insert Wake Entry", "insertWakeEntry")
+    .addItem("Insert Bedtime Entry", "insertBedtimeEntry")
     .addToUi();
 }
 
@@ -27,7 +29,7 @@ const PAGE_BREAK = { type: "page_break" };
 
 
 // =====================
-// Main Entry
+// Meal Entry
 // =====================
 function insertMealEntry() {
   const doc = DocumentApp.getActiveDocument();
@@ -73,7 +75,98 @@ function insertMealEntry() {
 }
 
 // =====================
-// Template Builder
+// Wake Entry
+// =====================
+function insertWakeEntry() {
+  const doc = DocumentApp.getActiveDocument();
+  const body = doc.getBody();
+  const cursor = doc.getCursor();
+
+  const now = new Date();
+  const tz = Session.getScriptTimeZone();
+
+  const dateString = Utilities.formatDate(now, tz, "yyyy-MM-dd");
+  const timeString = Utilities.formatDate(now, tz, "h:mm a");
+
+  const template = [
+    H2(`Wake Entry — ${dateString} ${timeString}`),
+    BLANK,
+
+    P("Fasting glucose:"),
+    P("Sleep quality (1–10):"),
+    BLANK,
+
+    H3("Night / Morning Context"),
+    P("Last meal timing (approx):"),
+    P("Sleep duration:"),
+    P("Wake quality (groggy / normal / alert):"),
+    BLANK,
+
+    H3("Symptoms"),
+    P("Any symptoms (headache, shaky, dizziness, etc.):"),
+    BLANK,
+
+    H3("Notes"),
+    P("Anything unusual or relevant:"),
+    BLANK,
+
+    HR,
+    BLANK
+  ];
+
+  insertAtCursorOrEnd(body, cursor, template);
+}
+
+// =====================
+// Bedtime Entry
+// =====================
+function insertBedtimeEntry() {
+  const doc = DocumentApp.getActiveDocument();
+  const body = doc.getBody();
+  const cursor = doc.getCursor();
+
+  const now = new Date();
+  const tz = Session.getScriptTimeZone();
+
+  const dateString = Utilities.formatDate(now, tz, "yyyy-MM-dd");
+  const timeString = Utilities.formatDate(now, tz, "h:mm a");
+
+  const template = [
+    H2(`Bedtime Entry — ${dateString} ${timeString}`),
+    BLANK,
+
+    P("Current glucose:"),
+    P("Trend before bed (rising / stable / falling):"),
+    BLANK,
+
+    H3("Food / Activity Context"),
+    P("Last meal (time + type):"),
+    P("Exercise today (Y/N + details):"),
+    BLANK,
+
+    H3("Physiological Context"),
+    P("Alcohol / stress / illness (if any):"),
+    P("Sleepiness level (1–10):"),
+    BLANK,
+
+    H3("Sleep Transition"),
+    P("Estimated time I fell asleep:"),
+    P("Any overnight concerns expected?"),
+    BLANK,
+
+    H3("Notes"),
+    P("Anything unusual today:"),
+    BLANK,
+
+    HR,
+    BLANK
+  ];
+
+  insertAtCursorOrEnd(body, cursor, template);
+}
+  
+// =====================
+// Meal Template Builder
 // =====================
 function buildTemplate(dateString, timeString) {
   return [
@@ -161,6 +254,32 @@ function buildTemplate(dateString, timeString) {
     HR,
     BLANK
   ];
+}
+
+// =====================
+// Cursor Insert Helper (shared)
+// =====================
+function insertAtCursorOrEnd(body, cursor, lines) {
+  if (cursor) {
+    let element = cursor.getElement();
+
+    while (
+      element &&
+      element.getParent() &&
+      element.getParent().getType() !== DocumentApp.ElementType.BODY_SECTION
+    ) {
+      element = element.getParent();
+    }
+
+    let index = body.getChildIndex(element);
+
+    lines.forEach(line => {
+      body.insertParagraph(index++, line);
+    });
+
+  } else {
+    lines.forEach(line => body.appendParagraph(line));
+  }
 }
 
 // =====================
