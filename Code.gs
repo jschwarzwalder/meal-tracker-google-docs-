@@ -1,3 +1,7 @@
+// Glucose Tracker
+// Version: 1.2
+// Last updated: 2026-07-04
+
 /* global DocumentApp, Session, Utilities */
 
 function onOpen() {
@@ -39,39 +43,11 @@ function insertMealEntry() {
   const now = new Date();
   const tz = Session.getScriptTimeZone();
 
-  const dateString = Utilities.formatDate(now, tz, "yyyy-MM-dd");
-  const timeString = Utilities.formatDate(now, tz, "h:mm a");
+  const { dateString, timeString } = getCurrentDateTime();
 
-  const template = buildTemplate(dateString, timeString);
+  const template = buildMealTemplate(dateString, timeString);
 
-  // If no cursor → append to end
-  if (!cursor) {
-    renderAtEnd(body, template);
-    return;
-  }
-
-  const element = cursor.getElement();
-
-  // Find nearest BODY-level element safely
-  let parent = element;
-
-  while (
-    parent &&
-    parent.getParent() &&
-    parent.getParent().getType() !== DocumentApp.ElementType.BODY_SECTION
-  ) {
-    parent = parent.getParent();
-  }
-
-  // If something weird happens, fallback
-  if (!parent) {
-    renderAtEnd(body, template);
-    return;
-  }
-
-  const index = body.getChildIndex(parent);
-
-  renderAtIndex(body, template, index);
+  insertAtCursorOrEnd(body, cursor, template);
 }
 
 // =====================
@@ -85,11 +61,11 @@ function insertWakeEntry() {
   const now = new Date();
   const tz = Session.getScriptTimeZone();
 
-  const dateString = Utilities.formatDate(now, tz, "yyyy-MM-dd");
-  const timeString = Utilities.formatDate(now, tz, "h:mm a");
+  const { dateString, timeString } = getCurrentDateTime();
 
   const template = [
-    H2(`Wake Entry — ${dateString} ${timeString}`),
+    PAGE_BREAK,
+    H2(`Wake Entry — ${dateString}`),
     BLANK,
 
     P("Fasting glucose:"),
@@ -98,6 +74,7 @@ function insertWakeEntry() {
 
     H3("Night / Morning Context"),
     P("Last meal timing (approx):"),
+    P(`Approximate  Wake Time:  ${timeString}`),
     P("Sleep duration:"),
     P("Wake quality (groggy / normal / alert):"),
     BLANK,
@@ -128,10 +105,10 @@ function insertBedtimeEntry() {
   const now = new Date();
   const tz = Session.getScriptTimeZone();
 
-  const dateString = Utilities.formatDate(now, tz, "yyyy-MM-dd");
-  const timeString = Utilities.formatDate(now, tz, "h:mm a");
+  const { dateString, timeString } = getCurrentDateTime();
 
   const template = [
+    PAGE_BREAK,
     H2(`Bedtime Entry — ${dateString} ${timeString}`),
     BLANK,
 
@@ -150,6 +127,7 @@ function insertBedtimeEntry() {
     BLANK,
 
     H3("Sleep Transition"),
+    P(`Bedtime Entry Generated — ${timeString}`),
     P("Estimated time I fell asleep:"),
     P("Any overnight concerns expected?"),
     BLANK,
@@ -168,7 +146,7 @@ function insertBedtimeEntry() {
 // =====================
 // Meal Template Builder
 // =====================
-function buildTemplate(dateString, timeString) {
+function buildMealTemplate(dateString, timeString) {
   return [
     PAGE_BREAK,
 
@@ -257,29 +235,40 @@ function buildTemplate(dateString, timeString) {
 }
 
 // =====================
+// Date & Time Helper
+// =====================
+function getCurrentDateTime() {
+  const now = new Date();
+  const tz = Session.getScriptTimeZone();
+
+  return {
+    dateString: Utilities.formatDate(now, tz, "yyyy-MM-dd"),
+    timeString: Utilities.formatDate(now, tz, "h:mm a")
+  };
+}
+
+// =====================
 // Cursor Insert Helper (shared)
 // =====================
-function insertAtCursorOrEnd(body, cursor, lines) {
-  if (cursor) {
-    let element = cursor.getElement();
-
-    while (
-      element &&
-      element.getParent() &&
-      element.getParent().getType() !== DocumentApp.ElementType.BODY_SECTION
-    ) {
-      element = element.getParent();
-    }
-
-    let index = body.getChildIndex(element);
-
-    lines.forEach(line => {
-      body.insertParagraph(index++, line);
-    });
-
-  } else {
-    lines.forEach(line => body.appendParagraph(line));
+function insertAtCursorOrEnd(body, cursor, template) {
+  if (!cursor) {
+    renderAtEnd(body, template);
+    return;
   }
+
+  let element = cursor.getElement();
+
+  while (
+    element &&
+    element.getParent() &&
+    element.getParent().getType() !== DocumentApp.ElementType.BODY_SECTION
+  ) {
+    element = element.getParent();
+  }
+
+  const index = body.getChildIndex(element);
+
+  renderAtIndex(body, template, index);
 }
 
 // =====================
