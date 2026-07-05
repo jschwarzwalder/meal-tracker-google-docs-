@@ -40,9 +40,6 @@ function insertMealEntry() {
   const body = doc.getBody();
   const cursor = doc.getCursor();
 
-  const now = new Date();
-  const tz = Session.getScriptTimeZone();
-
   const { dateString, timeString } = getCurrentDateTime();
 
   const template = buildMealTemplate(dateString, timeString);
@@ -57,9 +54,6 @@ function insertWakeEntry() {
   const doc = DocumentApp.getActiveDocument();
   const body = doc.getBody();
   const cursor = doc.getCursor();
-
-  const now = new Date();
-  const tz = Session.getScriptTimeZone();
 
   const { dateString, timeString } = getCurrentDateTime();
 
@@ -102,9 +96,6 @@ function insertBedtimeEntry() {
   const body = doc.getBody();
   const cursor = doc.getCursor();
 
-  const now = new Date();
-  const tz = Session.getScriptTimeZone();
-
   const { dateString, timeString } = getCurrentDateTime();
 
   const template = [
@@ -127,7 +118,7 @@ function insertBedtimeEntry() {
     BLANK,
 
     H3("Sleep Transition"),
-    P(`Bedtime Entry Generated — ${timeString}`),
+    P(`Approximate Bedtime: ${timeString}`)
     P("Estimated time I fell asleep:"),
     P("Any overnight concerns expected?"),
     BLANK,
