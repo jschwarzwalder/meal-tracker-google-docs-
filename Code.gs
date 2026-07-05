@@ -117,28 +117,28 @@ function buildTemplate(dateString, timeString) {
     PAGE_BREAK,
 
     H3("Dexcom Readings (start at first bite)"),
-P("────────────────────────────────"),
-P(" Dexcom Event Log (log at first bite in Dexcom app)"),
-P("────────────────────────────────"),
-
-P("Event name"),
-P("  e.g. Chicken sandwich + fries"),
-P(""),
-
-P("Meal type"),
-P("  Protein-heavy / Carb-heavy / Mixed / Snack / Restaurant"),
-P(""),
-
-P("Estimated carbs"),
-P("  Low (0–20g) / Medium (20–60g) / High (60g+)"),
-P(""),
-
-P("Notes (optional)"),
-P("  stress • illness • unusual hunger • alcohol • etc."),
-P(""),
-
-P("────────────────────────────────"),
-BLANK,
+    P("────────────────────────────────"),
+    P(" Dexcom Event Log (log at first bite in Dexcom app)"),
+    P("────────────────────────────────"),
+    
+    P("Event name"),
+    P("  e.g. Chicken sandwich + fries"),
+    P(""),
+    
+    P("Meal type"),
+    P("  Protein-heavy / Carb-heavy / Mixed / Snack / Restaurant"),
+    P(""),
+    
+    P("Estimated carbs"),
+    P("  Low (0–20g) / Medium (20–60g) / High (60g+)"),
+    P(""),
+    
+    P("Notes (optional)"),
+    P("  stress • illness • unusual hunger • alcohol • etc."),
+    P(""),
+    
+    P("────────────────────────────────"),
+    BLANK,
     BLANK,
     P("Pre-meal glucose:"),
     P("30 min glucose:"),
