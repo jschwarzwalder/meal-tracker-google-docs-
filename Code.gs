@@ -23,6 +23,7 @@ const H3 = text => ({ type: TYPE.H3, text });
 const P = text => ({ type: TYPE.P, text });
 const BLANK = { type: TYPE.BLANK };
 const HR = { type: TYPE.HR };
+const PAGE_BREAK = { type: "page_break" };
 
 
 // =====================
@@ -76,6 +77,8 @@ function insertMealEntry() {
 // =====================
 function buildTemplate(dateString, timeString) {
   return [
+    PAGE_BREAK,
+
     H2(`Meal Entry — ${dateString} ${timeString}`),
     BLANK,
 
@@ -111,8 +114,32 @@ function buildTemplate(dateString, timeString) {
     P("Hunger/stress/exercise/illness/ate quickly or slowly (short notes):"),
 
     BLANK,
+    PAGE_BREAK,
 
     H3("Dexcom Readings (start at first bite)"),
+P("────────────────────────────────"),
+P(" Dexcom Event Log (log at first bite in Dexcom app)"),
+P("────────────────────────────────"),
+
+P("Event name"),
+P("  e.g. Chicken sandwich + fries"),
+P(""),
+
+P("Meal type"),
+P("  Protein-heavy / Carb-heavy / Mixed / Snack / Restaurant"),
+P(""),
+
+P("Estimated carbs"),
+P("  Low (0–20g) / Medium (20–60g) / High (60g+)"),
+P(""),
+
+P("Notes (optional)"),
+P("  stress • illness • unusual hunger • alcohol • etc."),
+P(""),
+
+P("────────────────────────────────"),
+BLANK,
+    BLANK,
     P("Pre-meal glucose:"),
     P("30 min glucose:"),
     P("60 min glucose:"),
@@ -186,6 +213,12 @@ function renderItem(body, item, index) {
     return index != null
       ? body.insertParagraph(index, "")
       : body.appendParagraph("");
+  }
+
+  else if (item.type === "page_break") {
+  return index != null
+    ? body.insertPageBreak(index)
+    : body.appendPageBreak();
   }
 
   else if (item.type === TYPE.HR) {
