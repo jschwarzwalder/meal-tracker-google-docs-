@@ -1,6 +1,6 @@
 // Glucose Tracker
-// Version: 1.2
-// Last updated: 2026-07-04
+// Version: 1.3 (Mobile Tabs & Smart Components Upgrade)
+// Last updated: 2026-07-10
 
 /* global DocumentApp, Session, Utilities */
 
@@ -22,7 +22,8 @@ function onOpen() {
 const TYPE = Object.freeze({
   H2: "h2",
   H3: "h3",
-  P: "p",
+  P: "p",  
+  CHECKBOX: "checkbox",
   BLANK: "blank",
   HR: "hr"
 });
@@ -36,12 +37,31 @@ const PAGE_BREAK = { type: "page_break" };
 
 
 // =====================
+// Tab-Aware Body Target Helper
+// =====================
+function getTargetBody() {
+  const doc = DocumentApp.getActiveDocument();
+
+  // Check if the new Google Tabs feature is present in the environment
+  if (typeof doc.getTabs === 'function') {
+    const tabs = doc.getTabs();
+    if (tabs && tabs.length > 0) {
+      // Always target Tab 1 ("Active Tracker") so logs go to your main list
+      return tabs[0].asDocumentTab().getBody();
+    }
+  }
+  return doc.getBody();
+}
+
+
+// =====================
 // Meal Entry
 // =====================
 function insertMealEntry() {
   const doc = DocumentApp.getActiveDocument();
-  const body = doc.getBody();
+  const body = getTargetBody();
   const cursor = doc.getCursor();
+  
 
   const { dateString, timeString } = getCurrentDateTime();
 
@@ -69,23 +89,19 @@ function buildMealTemplate(dateString, timeString) {
     P("Food & portions (be specific):"),
     BLANK,
 
-    P("Protein at meal? (Y/N; what/how much):"),
+    CHECKBOX("Protein at meal? (what/how much):"),
     BLANK,
 
     P("Carb type(s):"),
     P("Total carbohydrates (if known):"),
     BLANK,
 
+    CHECKBOX("Sauces/added fats:"),
+    CHECKBOX("Fiber/vegetables included? (what):"),
+    CHECKBOX("Caffeine/alcohol? (what/how much):"),
+    BLANK,
+
     P("Cooking method:"),
-    BLANK,
-
-    P("Sauces/added fats:"),
-    BLANK,
-
-    P("Fiber/vegetables included? (Y/N; what):"),
-    BLANK,
-
-    P("Caffeine/alcohol? (Y/N; what/how much):"),
     BLANK,
 
     P("Context / notes"),
@@ -146,7 +162,7 @@ function buildMealTemplate(dateString, timeString) {
 // =====================
 function insertWakeEntry() {
   const doc = DocumentApp.getActiveDocument();
-  const body = doc.getBody();
+  const body = getTargetBody();
   const cursor = doc.getCursor();
 
   const { dateString, timeString } = getCurrentDateTime();
@@ -162,7 +178,7 @@ function insertWakeEntry() {
 
     H3("Night / Morning Context"),
     P("Last meal timing (approx):"),
-    P(`Approximate  Wake Time:  ${timeString}`),
+    P(`Approximate  Wake Time: ${timeString}`),
     P("Sleep duration:"),
     P("Wake quality (groggy / normal / alert):"),
     BLANK,
@@ -187,7 +203,7 @@ function insertWakeEntry() {
 // =====================
 function insertBedtimeEntry() {
   const doc = DocumentApp.getActiveDocument();
-  const body = doc.getBody();
+  const body = getTargetBody();
   const cursor = doc.getCursor();
 
   const { dateString, timeString } = getCurrentDateTime();
@@ -203,7 +219,7 @@ function insertBedtimeEntry() {
 
     H3("Food / Activity Context"),
     P("Last meal (time + type):"),
-    P("Exercise today (Y/N + details):"),
+    CHECKBOX("Exercise today? (details):"),
     BLANK,
 
     H3("Physiological Context"),
@@ -233,7 +249,7 @@ function insertBedtimeEntry() {
 // =====================
 function insertSensorChange() {
   const doc = DocumentApp.getActiveDocument();
-  const body = doc.getBody();
+  const body = getTargetBody();
   const cursor = doc.getCursor();
 
   const now = new Date(); // for math
@@ -267,8 +283,8 @@ const expTimeString = Utilities.formatDate(
 
     H3("Insertion"),
     P("Insertion Site:"),
-    P("Any bleeding?"),
-    P("Warm-up completed?"),
+    CHECKBOX("Any bleeding?"),
+    CHECKBOX("Warm-up completed?"),
     BLANK,
 
     H3("Notes"),
@@ -287,7 +303,7 @@ const expTimeString = Utilities.formatDate(
 // =====================
 function insertTransmitterChange() {
   const doc = DocumentApp.getActiveDocument();
-  const body = doc.getBody();
+  const body = getTargetBody();
   const cursor = doc.getCursor();
 
   const now = new Date(); // for math
@@ -429,6 +445,15 @@ function renderItem(body, item, index) {
     return index != null
       ? body.insertParagraph(index, item.text)
       : body.appendParagraph(item.text);
+  }
+
+  // Programmatic Checklist Generation
+  else if (item.type === TYPE.CHECKBOX) {
+    const listItem = index != null 
+      ? body.insertListItem(index, item.text) 
+      : body.appendListItem(item.text);
+    listItem.setGlyphType(DocumentApp.GlyphType.SQUARE_BULLET); // Forces live Google Doc checkbox
+    return listItem;
   }
 
   else if (item.type === TYPE.BLANK) {
