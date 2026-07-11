@@ -1,5 +1,5 @@
 // Glucose Tracker
-// Version: 1.3 (Mobile Tabs & Smart Components Upgrade)
+// Version: 1.4 (Template Formatting Upgrade)
 // Last updated: 2026-07-10
 
 /* global DocumentApp, Session, Utilities */
@@ -30,7 +30,8 @@ const TYPE = Object.freeze({
 
 const H2 = text => ({ type: TYPE.H2, text });
 const H3 = text => ({ type: TYPE.H3, text });
-const P = text => ({ type: TYPE.P, text });
+const P = (text, bold = false) => ({ type: TYPE.P, text, bold });
+const CHECKBOX = text => ({ type: TYPE.CHECKBOX, text }); 
 const BLANK = { type: TYPE.BLANK };
 const HR = { type: TYPE.HR };
 const PAGE_BREAK = { type: "page_break" };
@@ -89,13 +90,11 @@ function buildMealTemplate(dateString, timeString) {
     P("Food & portions (be specific):"),
     BLANK,
 
-    CHECKBOX("Protein at meal? (what/how much):"),
-    BLANK,
-
-    P("Carb type(s):"),
+    P("Carb type(s):", true),
     P("Total carbohydrates (if known):"),
     BLANK,
 
+    CHECKBOX("Protein at meal? (what/how much):"),
     CHECKBOX("Sauces/added fats:"),
     CHECKBOX("Fiber/vegetables included? (what):"),
     CHECKBOX("Caffeine/alcohol? (what/how much):"),
@@ -104,7 +103,7 @@ function buildMealTemplate(dateString, timeString) {
     P("Cooking method:"),
     BLANK,
 
-    P("Context / notes"),
+    P("Context / notes", true),
     P("Hunger/stress/exercise/illness/ate quickly or slowly (short notes):"),
 
     BLANK,
@@ -442,18 +441,28 @@ function renderItem(body, item, index) {
   }
 
   else if (item.type === TYPE.P) {
-    return index != null
-      ? body.insertParagraph(index, item.text)
+    const p = index != null 
+      ? body.insertParagraph(index, item.text) 
       : body.appendParagraph(item.text);
+    
+    if (item.bold) {
+      p.setBold(true);
+    } else {
+      p.setBold(false); 
+    }
+    return p;
   }
 
   // Programmatic Checklist Generation
   else if (item.type === TYPE.CHECKBOX) {
-    const listItem = index != null 
-      ? body.insertListItem(index, item.text) 
-      : body.appendListItem(item.text);
-    listItem.setGlyphType(DocumentApp.GlyphType.SQUARE_BULLET); // Forces live Google Doc checkbox
-    return listItem;
+    const textContent = "[ ]  " + item.text;
+    const p = index != null 
+      ? body.insertParagraph(index, textContent) 
+      : body.appendParagraph(textContent);
+    
+    p.setLineSpacing(1.15); // Keeps standard text line height
+    p.setSpacingAfter(0);     // Strips the large paragraph gap below the checkbox
+    return p;
   }
 
   else if (item.type === TYPE.BLANK) {
