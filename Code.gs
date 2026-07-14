@@ -1,5 +1,5 @@
 // Glucose Tracker
-// Version: 1.4 (Template Formatting Upgrade)
+// Version: 1.5 (Adding Entry Type)
 // Last updated: 2026-07-10
 
 /* global DocumentApp, Session, Utilities */
@@ -82,6 +82,8 @@ function buildMealTemplate(dateString, timeString) {
     BLANK,
 
     P("Meal #:"),
+    P("Entry Type: Meal"), 
+    P("Meal category: Breakfast / Lunch / Dinner / Snack"),
     P(`Date: ${dateString}`),
     P(`Meal time (start/end): ${timeString} / _____`),
     BLANK,
@@ -94,7 +96,8 @@ function buildMealTemplate(dateString, timeString) {
     P("Total carbohydrates (if known):"),
     BLANK,
 
-    CHECKBOX("Protein at meal? (what/how much):"),
+    P("Protein type(s):"),
+    P("Protein at meal? (what/how much):"),
     CHECKBOX("Sauces/added fats:"),
     CHECKBOX("Fiber/vegetables included? (what):"),
     CHECKBOX("Caffeine/alcohol? (what/how much):"),
@@ -109,9 +112,9 @@ function buildMealTemplate(dateString, timeString) {
     BLANK,
     PAGE_BREAK,
 
-    H3("Dexcom Readings (start at first bite)"),
+    H3("Dexcom Readings (start at meal time)"),
     P("────────────────────────────────"),
-    P(" Dexcom Event Log (log at first bite in Dexcom app)"),
+    P(" Dexcom Event Log (log at meal start in Dexcom app)"),
     P("────────────────────────────────"),
     
     P("Event name"),
@@ -170,7 +173,8 @@ function insertWakeEntry() {
     PAGE_BREAK,
     H2(`Wake Entry — ${dateString}`),
     BLANK,
-
+    P("Entry Type: Wake"),
+    P(`Date: ${dateString}`),
     P("Fasting glucose:"),
     P("Sleep quality (1–10):"),
     BLANK,
@@ -212,6 +216,8 @@ function insertBedtimeEntry() {
     H2(`Bedtime Entry — ${dateString} ${timeString}`),
     BLANK,
 
+    P("Entry Type: Bedtime"),
+    P(`Date: ${dateString}`),
     P("Current glucose:"),
     P("Trend before bed (rising / stable / falling):"),
     BLANK,
@@ -275,6 +281,7 @@ const expTimeString = Utilities.formatDate(
     BLANK,
 
     H3("Installation"),
+    P("Entry Type: Sensor"),
     P(`Installed: ${dateString} ${timeString}`),
     P("Sensor Code:"),
     P(`Approximate Expiration: ${expDateString} ${expTimeString}`),
@@ -327,7 +334,9 @@ function insertTransmitterChange() {
 
     H2(`Dexcom Transmitter Change — ${dateString}`),
     BLANK,
-
+    P("Entry Type: Transmitter"),
+    P(`Date: ${dateString}`),
+    BLANK,
     H3("Installation"),
     P(`Installed: ${dateString} ${timeString}`),
     P(`Transmitter ID: `),
