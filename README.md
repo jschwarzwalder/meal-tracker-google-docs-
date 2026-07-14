@@ -8,20 +8,26 @@ A Google Apps Script tool that adds a **Meal Tracker system inside Google Docs**
 
 It generates structured meal logs with automatic timestamps and is designed for tracking nutrition alongside CGM data (e.g., Dexcom).
 
-This project turns a Google Doc into a lightweight personal health logging system.
+
+This project uses Google Apps Script to extend Google Docs beyond document editing, creating a structured health logging system designed for flexible data capture and future analysis.
 
 ---
 
 ## Why this exists
 
-Most nutrition tracking tools are either:
-- too heavy (apps with accounts, dashboards, etc.)
-- too rigid (limited customization)
-- disconnected from personal workflow
+Many tracking tools optimize for either comprehensive features or strict data structures, but can introduce friction into everyday logging workflows.
 
 This project integrates directly into Google Docs, allowing fast, flexible logging without leaving your writing environment.
 
 This project treats Google Docs as a lightweight structured data logger rather than a traditional document editor.
+
+## Design Goals
+
+- Minimize friction during data entry
+- Keep logs human-readable inside Google Docs
+- Capture structured data without requiring a dedicated application
+- Preserve flexibility while enabling future analysis
+- Separate data collection from interpretation and reporting
 
 ## Project Overview
 
@@ -36,12 +42,20 @@ https://script.google.com/home/projects/1-NSvFGW8RUkGKdfPGDTA3j2KusTfoU27pTpkpni
 ### Apps Script Project ID
 `1-NSvFGW8RUkGKdfPGDTA3j2KusTfoU27pTpkpnizcCoAJ4Hy3px7LzNB`
 
-This project is maintained in GitHub and deployed via Google Apps Script.
-
 ## Status
 
-Actively used and iterated on for personal health tracking workflows.
+Continuously developed through real-world usage, with a focus on structured data capture and workflow optimization.
 
+## Technical Highlights
+
+- Google Apps Script integration with Google Docs
+- Custom document rendering system for reusable templates
+- Cursor-aware insertion into existing documents
+- Structured logging schema designed for future data analysis
+- Version-controlled development workflow using GitHub
+- AI-assisted data normalization and interpretation workflow
+
+  
 ## Screenshots
 
 ### Meal Tracker Menu
@@ -59,6 +73,17 @@ Actively used and iterated on for personal health tracking workflows.
 - Automatically fills in the current date
 - Automatically fills in the current time
 - Inserts the template at the current cursor position
+- Structured entry templates for:
+  - Meal tracking
+  - Wake entries
+  - Bedtime entries
+  - Dexcom sensor changes
+  - Transmitter changes
+- CGM observation fields including:
+  - Pre/post meal glucose
+  - Peak glucose
+  - Time above/below range
+  - Symptoms and contextual notes
 - Organized sections for:
   - Meal information
   - Food details
@@ -116,6 +141,7 @@ Anything unusual about this meal?
 
 Overall thoughts:
 ```
+
 ## Quick Start
 Fastest way to get running:
 
@@ -170,14 +196,30 @@ Keep in mind that the playground does **not** understand the Google Apps Script 
 
 ## Future Ideas
 
-* Automatic meal numbering
-* Custom date and time formats
-* Checkboxes for Yes/No fields
-* Sidebar entry form
-* Export to CSV
-* Integration with Google Sheets
-* CGM data import
-* Nutrition analysis
+### Data Quality & Standardization
+- Historical entry cleanup and migration tools
+- Template version tracking
+- Automated detection of older entry formats
+- Improved metadata for programmatic parsing
+
+### Analysis & Reporting
+- Structured data export and downstream analysis pipelines
+- Meal pattern summaries
+- Nutrition trend analysis
+- CGM response summaries
+- Sleep and glucose relationship analysis
+
+### Workflow Improvements
+- Alternative data entry interfaces
+- Faster entry workflows
+- Additional automated fields
+- Custom reports
+
+## Versioning
+
+Current development version: 1.x
+
+The project uses version markers in source files and documentation to keep templates, Apps Script code, and AI-assisted workflows synchronized.
 
 ## Contributing
 
