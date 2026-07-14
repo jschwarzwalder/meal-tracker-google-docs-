@@ -1,6 +1,7 @@
 // Glucose Tracker
-// Version: 1.5 (Adding Entry Type)
-// Last updated: 2026-07-10
+// Version: 1.6
+// Last updated: 2026-07-13
+// Changes: Template updates and AI prompt alignment
 
 /* global DocumentApp, Session, Utilities */
 
@@ -213,18 +214,18 @@ function insertBedtimeEntry() {
 
   const template = [
     PAGE_BREAK,
+
     H2(`Bedtime Entry — ${dateString} ${timeString}`),
     BLANK,
 
     P("Entry Type: Bedtime"),
     P(`Date: ${dateString}`),
     P("Current glucose:"),
-    P("Trend before bed (rising / stable / falling):"),
+    P("Trend before bed (Rising / Stable / Falling):"),
     BLANK,
 
     H3("Food / Activity Context"),
     P("Last meal (time + type):"),
-    CHECKBOX("Exercise today? (details):"),
     BLANK,
 
     H3("Physiological Context"),
@@ -233,8 +234,34 @@ function insertBedtimeEntry() {
     BLANK,
 
     H3("Sleep Transition"),
-    P(`Approximate Bedtime: ${timeString}`),
-    P("Estimated time I fell asleep:"),
+    P("Bedtime routine / started winding down:"),
+    P("Entered bed at:"),
+    P("Estimated sleep start time:"),
+    P("Awake after entering bed? Yes / No"),
+    P("Approximate awake duration before sleep:"),
+    BLANK,
+
+    P("Sleep location(s):"),
+    CHECKBOX("Bed"),
+    CHECKBOX("Couch"),
+    CHECKBOX("Other:"),
+    BLANK,
+
+    P("Moved locations overnight (if applicable):"),
+    BLANK,
+
+    P("CPAP use:"),
+    CHECKBOX("Used CPAP for entire sleep period"),
+    CHECKBOX("Used CPAP for part of sleep period"),
+    CHECKBOX("Did not use CPAP"),
+    P("Approximate CPAP start time:"),
+    BLANK,
+
+    H3("Overnight"),
+    P("Sleep interruptions or movement:"),
+    P("(e.g., awake periods, reading, bathroom, moved between bed and couch, etc.)"),
+    BLANK,
+
     P("Any overnight concerns expected?"),
     BLANK,
 
