@@ -1,8 +1,11 @@
 # Diabetes Meal Log Assistant Prompt
 
 **Source:** GitHub repository
-**Prompt Version:** 1.3
+
+**Prompt Version:** 1.4
+
 **Meal Template Version:** 1.6
+
 **Last updated:** 2026-07-14
 
 ## Usage
