@@ -96,50 +96,83 @@ Continuously developed through real-world usage, with a focus on structured data
  
 ## Example
 
+**Meal Template Version:** 1.6
+
 ```text
-Meal Entry
+Meal Entry YYYY-MM-DD HH:MM
 
 Meal #:
-Date: 2026-07-03
-Meal time (start): 7:35 PM
+Entry Type: Meal
+Meal Category: Breakfast / Lunch / Dinner / Snack
+Date: YYYY-MM-DD
+Meal time (start/end): _____ / _____
 
 Food
 
 Food & portions (be specific):
 
-Protein at meal? (Y/N; what/how much):
-
 Carb type(s):
 Total carbohydrates (if known):
 
+Protein type(s): (e.g. Chicken, Eggs, Cheese, Beans, Greek yogurt — full list in docs/)
+Protein at meal? (what/how much):
+
+Sauces/added fats (what):
+Fiber/vegetables included? (what):
+Caffeine/alcohol? (what/how much):
 Cooking method:
 
-Sauces/added fats:
+Context/Notes
 
-Fiber/vegetables included? (Y/N; what):
+Hunger/stress/exercise/illness/ate quickly or slowly (short notes):
 
-Caffeine/alcohol? (Y/N; what/how much):
+Dexcom Readings (start at meal time)
+────────────────────────────────
+Dexcom Event Log (log at meal start in Dexcom app)
 
-Other notes:
+Event name:
+(e.g., Chicken sandwich + fries)
 
-Dexcom Readings
+Meal type: Protein-heavy / Carb-heavy / Snack / Mixed / Restaurant
+Estimated carbs: Low (0–20g) / Medium (20–60g) / High (60g+)
+Notes (optional): Normal / Stress / Illness / Unusual Hunger / Alcohol
+────────────────────────────────
 
 Pre-meal glucose:
 30 min glucose:
 60 min glucose:
 90 min glucose:
 120 min glucose:
-Peak glucose:
-Peak time:
-Time above 180 mg/dL:
-Time below 70 mg/dL:
+Peak glucose (0–2h):
+Peak time (minutes after meal start or clock time):
+Time >180 mg/dL (approx minutes or start–end clock times):
+Time below 70 mg/dL (rough):
 Symptoms:
+
+Scheduled Glucose Checks
+(If glucose readings have not been recorded, calculate suggested check times from meal start time.)
+
+30 minutes after meal start:
+60 minutes after meal start:
+90 minutes after meal start:
+120 minutes after meal start:
 
 Optional Notes
 
 Anything unusual about this meal?
+Overall thoughts (1–2 lines):
+```
+## Project Structure
 
-Overall thoughts:
+```
+meal-tracker-google-docs-/
+├── Code.gs                  # Apps Script: menu, templates, insertion logic
+├── docs/
+│   ├── diabetes-meal-log-assistant-prompt.md
+│   ├── diabetes-meal-new-log-prompt.md
+│   ├── diabetes-meal-prompt-test-cases.md
+│   └── sample_dexcom_export*.csv
+├── screenshot/               # README images
 ```
 
 ## Quick Start
@@ -167,6 +200,61 @@ After installation, you'll see a new **Meal Tracker** menu in the document.
 1. Place your cursor where you want the meal entry inserted.
 2. Click **Meal Tracker → Insert Meal Entry**.
 3. The template will be inserted with the current date and time already filled in.
+
+## AI-Assisted Logging Workflow
+
+This project pairs the Google Docs template system with a set of standardized
+AI assistant prompts for logging, cleanup, and nutrition estimation.
+
+The workflow is designed around a few core principles:
+
+- **Accuracy over completeness** — the assistant never invents or assumes
+  missing information (e.g. carbohydrate estimates, glucose readings).
+- **Preservation of the historical record** — existing entries are updated
+  in place as new information arrives (Dexcom readings, corrections,
+  follow-up notes) rather than replaced or summarized away.
+- **Neutral, body-positive framing** — meals are documented factually,
+  without moralizing language ("good," "bad," "cheat," etc.), consistent
+  with a Health At Every Size (HAES)-inclusive approach.
+- **Never predicts future glucose response** — only observed CGM data is
+  summarized; the assistant does not forecast how a meal *will* affect
+  glucose.
+- **Scheduled Glucose Checks** are designed to pair with external reminders
+  (e.g. a voice assistant routine) so check times aren't missed while away
+  from home.
+
+### Prompt files
+
+| File | Purpose |
+|---|---|
+| `docs/diabetes-meal-log-assistant-prompt.md` | The full assistant prompt — template rules, nutrition estimation, glucose data handling, and multi-entry log cleanup for normalizing a day's worth of notes (e.g. after logging quickly from a phone or tablet). |
+| `docs/diabetes-meal-new-log-prompt.md` | A shorter, focused prompt for the moment you're about to eat and want a new entry started quickly, without loading the full prompt's cleanup/analysis rules first. |
+| `docs/diabetes-meal-prompt-test-cases.md` | A test suite of logging scenarios and expected outputs, used to verify that changes to the prompts (especially the shortened new-entry prompt) don't regress behavior. |
+
+### Estimating nutrition in practice
+
+Depending on the situation, nutrition information comes from different sources,
+in order of priority — confirmed intake first, then provided nutrition data,
+then estimates:
+
+- **Restaurant or delivery meals** (e.g. DoorDash): the assistant looks up
+  published nutrition information for the item.
+- **Meal kits** (e.g. Home Chef): nutrition info from the provider's website
+  is pasted directly into the prompt alongside what was actually eaten.
+- **Leftovers or partial portions**: a photo of the remaining food lets the
+  assistant estimate how much was actually consumed versus the full recipe.
+- **Frequently eaten foods**: a separate "Common Foods" tab in the Google Doc
+  tracks known quantities (e.g. a nightly glass of milk, a regular meal) for
+  manual reference, and can be pasted into the prompt when a meal combines
+  several known items.
+
+### Prompt Development & Testing
+
+The new-entry prompt went through iterative testing: shortening a prompt
+this thorough risked losing the accuracy and formatting guarantees of the
+full version. `diabetes-meal-prompt-test-cases.md` captures the edge cases
+and expected outputs used to validate each revision, allowing prompt
+changes to be compared consistently rather than checked ad hoc.
 
 ## Linting
 
