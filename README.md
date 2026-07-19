@@ -167,12 +167,14 @@ Overall thoughts (1–2 lines):
 ```
 meal-tracker-google-docs-/
 ├── Code.gs                  # Apps Script: menu, templates, insertion logic
+├── clean_dexcom.py          # Cleans raw Dexcom CSV exports
 ├── docs/
 │   ├── diabetes-meal-log-assistant-prompt.md
 │   ├── diabetes-meal-new-log-prompt.md
 │   ├── diabetes-meal-prompt-test-cases.md
 │   └── sample_dexcom_export*.csv
 ├── screenshot/               # README images
+└── dexcom-data/               # Real Dexcom exports (gitignored, not tracked)
 ```
 
 ## Quick Start
@@ -255,6 +257,32 @@ this thorough risked losing the accuracy and formatting guarantees of the
 full version. `diabetes-meal-prompt-test-cases.md` captures the edge cases
 and expected outputs used to validate each revision, allowing prompt
 changes to be compared consistently rather than checked ad hoc.
+
+## Dexcom CSV Cleanup
+
+Raw Dexcom Clarity exports include account/device setup rows and personal
+info (name, DOB) mixed in with the actual glucose readings. `clean_dexcom.py`
+strips this down to just timestamp + glucose value, with optional date/time
+windowing and CSV or JSON output.
+
+Real exports belong in `dexcom-data/` (gitignored, never committed). Run the 
+script with no arguments to interactively pick a file from that folder — useful 
+since Dexcom's export filenames are long.  See `docs/sample_dexcom_export.csv` 
+for a sanitized example of the input format.
+
+### Usage
+
+Run with no arguments to be prompted for a folder and file:
+```bash
+python clean_dexcom.py
+```
+
+Or specify a file directly:
+```bash
+python clean_dexcom.py dexcom-data/export.csv
+python clean_dexcom.py dexcom-data/export.csv --start "2025-01-01 08:00" --end "2025-01-01 12:00"
+python clean_dexcom.py dexcom-data/export.csv --format json -o readings.json
+```
 
 ## Linting
 
